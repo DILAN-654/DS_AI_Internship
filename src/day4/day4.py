@@ -38,7 +38,7 @@ print("Customers name : ",purchases.keys())
 print("Alice's purchase amount:", purchases.get("Alice", 0))
 
 #ex4
-'''n=int(input("Enter number of customers: "))
+n=int(input("Enter number of customers: "))
 user_purchases={}
 
 for _ in range(n):
@@ -46,8 +46,14 @@ for _ in range(n):
     amount=float(input("Enter purchase amount: "))
     user_purchases[name]=amount
 print("Customer Purchases: ",user_purchases)
-'''
 
 #ex5
 top_customers=max(purchases, key=purchases.get)
 print("Top spending customer:", top_customers)
+
+#ex6
+a={1,2,3}
+b={3,4,5}
+print("Union:", a | b)
+print("Intersection:", a & b)
+print(3 in a)
