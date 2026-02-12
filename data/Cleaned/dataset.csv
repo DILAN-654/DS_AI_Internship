@@ -1,0 +1,10 @@
+CustomerID,Name,Age,City,OrderAmount,PaymentMethod,Date
+101,Amit,25,bangalore,2500.0,UPI,2024-01-05
+102,Sara,28,mumbai,1800.0,Card,2024-01-10
+103,John,30,delhi,2171.4285714285716,Cash,2024-02-01
+104,Unknown,22,delhi,2200.0,Card,2024-02-05
+105,Priya,28,bangalore,3000.0,Card,2024-03-01
+106,David,28,chennai,2171.4285714285716,UPI,2024-03-05
+107,Meena,35,mumbai,1500.0,Cash,2024-03-10
+108,Ali,28,delhi,2700.0,Card,2024-04-01
+109,Riya,26,bangalore,2171.4285714285716,UPI,2024-04-05
