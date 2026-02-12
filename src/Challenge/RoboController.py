@@ -50,7 +50,7 @@ def robo_controller():
             turn = random.choice(["Straight", "Left", "Right"])
             action = "Path clear → moving smoothly"
 
-        print(f"🚧 Obstacle: {obstacle.upper()} | ⚡ Speed: {speed} m/s")
+        print(f" Obstacle: {obstacle.upper()} |  Speed: {speed} m/s")
         print(f" Action: {action}")
 
         # -------- Distance Calculation --------
