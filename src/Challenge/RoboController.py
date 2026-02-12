@@ -8,7 +8,7 @@ def robo_controller():
     """
 
     print("=" * 60)
-    print("🤖 ROBOCONTROLLER 1.0 - AUTOMATIC ROBOT SIMULATOR")
+    print(" ROBOCONTROLLER 1.0 - AUTOMATIC ROBOT SIMULATOR")
     print("=" * 60)
 
     robot_name = input("\nEnter robot's name: ").strip()
@@ -16,10 +16,10 @@ def robo_controller():
     try:
         target_distance = float(input("Enter distance to target (meters): "))
         if target_distance <= 0:
-            print("❌ Distance must be positive!")
+            print("Distance must be positive!")
             return
     except ValueError:
-        print("❌ Invalid distance input!")
+        print("Invalid distance input!")
         return
 
     checkpoints = []
@@ -27,8 +27,8 @@ def robo_controller():
     checkpoint_no = 1
     mission_status = "COMPLETED"
 
-    print("\n🔍 Sensors activated...")
-    print("🚀 Journey started...\n")
+    print("\n Sensors activated...")
+    print(" Journey started...\n")
 
     # -------- Journey Loop --------
     while distance_travelled < target_distance:
@@ -51,7 +51,7 @@ def robo_controller():
             action = "Path clear → moving smoothly"
 
         print(f"🚧 Obstacle: {obstacle.upper()} | ⚡ Speed: {speed} m/s")
-        print(f"➡️  Action: {action}")
+        print(f" Action: {action}")
 
         # -------- Distance Calculation --------
         step = min(
@@ -70,7 +70,7 @@ def robo_controller():
         })
 
         print(
-            f"📍 Checkpoint {checkpoint_no}: "
+            f" Checkpoint {checkpoint_no}: "
             f"{round(distance_travelled, 2)} m "
             f"(Obstacle: {obstacle}, Turn: {turn})\n"
         )
@@ -81,13 +81,13 @@ def robo_controller():
     avg_speed = round(distance_travelled / checkpoint_no, 2) if checkpoint_no > 1 else 0
 
     print("\n" + "╔" + "═" * 58 + "╗")
-    print("║" + "🌟 FINAL TRIP SUMMARY".center(58) + "║")
+    print("║" + " FINAL TRIP SUMMARY".center(58) + "║")
     print("╠" + "═" * 58 + "╣")
-    print(f"║ 🤖 Robot Name        : {robot_name:<32} ║")
-    print(f"║ 🎯 Target Distance   : {target_distance} m{' ' * 24}║")
-    print(f"║ 📏 Distance Travelled: {round(distance_travelled, 2)} m{' ' * 23}║")
-    print(f"║ 📍 Total Checkpoints : {len(checkpoints):<32} ║")
-    print(f"║ 📊 Avg Speed Factor  : {avg_speed} m/s{' ' * 21}║")
+    print(f"║  Robot Name        : {robot_name:<32} ║")
+    print(f"║  Target Distance   : {target_distance} m{' ' * 24}║")
+    print(f"║  Distance Travelled: {round(distance_travelled, 2)} m{' ' * 23}║")
+    print(f"║  Total Checkpoints : {len(checkpoints):<32} ║")
+    print(f"║  Avg Speed Factor  : {avg_speed} m/s{' ' * 21}║")
     print("╠" + "═" * 58 + "╣")
 
     for cp in checkpoints:
@@ -98,7 +98,7 @@ def robo_controller():
         print(f"║   • {line:<52} ║")
 
     print("╠" + "═" * 58 + "╣")
-    print(f"║ 🚀 Mission Status : {mission_status:<36} ║")
+    print(f"║  Mission Status : {mission_status:<36} ║")
     print("╚" + "═" * 58 + "╝")
 
 
