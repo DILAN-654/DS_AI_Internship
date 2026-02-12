@@ -30,11 +30,11 @@ def robo_controller():
     print("\n Sensors activated...")
     print(" Journey started...\n")
 
-    # -------- Journey Loop --------
+    # Journey Loop
     while distance_travelled < target_distance:
         obstacle = random.choice(["human", "wall", "none"])
 
-        # -------- Decision Making --------
+        #  Decision Making 
         if obstacle == "human":
             speed = 1.4  # m/s (slow walking speed)
             turn = random.choice(["Slight Left", "Slight Right"])
@@ -53,7 +53,7 @@ def robo_controller():
         print(f" Obstacle: {obstacle.upper()} |  Speed: {speed} m/s")
         print(f" Action: {action}")
 
-        # -------- Distance Calculation --------
+        # Distance Calculation
         step = min(
             speed * random.uniform(0.4, 1.0),
             target_distance - distance_travelled
@@ -61,7 +61,7 @@ def robo_controller():
 
         distance_travelled += step
 
-        # -------- Store Checkpoint --------
+        # Store Checkpoint 
         checkpoints.append({
             "number": checkpoint_no,
             "distance": round(distance_travelled, 2),
@@ -77,7 +77,7 @@ def robo_controller():
 
         checkpoint_no += 1
 
-    # -------- Trip Summary --------
+    #Trip Summary 
     avg_speed = round(distance_travelled / checkpoint_no, 2) if checkpoint_no > 1 else 0
 
     print("\n" + "╔" + "═" * 58 + "╗")
