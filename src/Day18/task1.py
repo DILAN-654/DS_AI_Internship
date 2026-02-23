@@ -13,6 +13,3 @@ print(f"\nAverage Stipend for each track: \n{gp_track}")
 
 cnt_track=pd.read_sql_query("SELECT track, COUNT(*) AS intern_count FROM interns GROUP BY track;",conn)
 print(f"\Count of Employees / Interns for each track: \n{cnt_track}")
-
-
-
