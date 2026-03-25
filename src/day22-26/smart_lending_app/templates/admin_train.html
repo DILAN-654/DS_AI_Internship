@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Model Training</h2>
+
+<div class="card">
+  <h3>Current Model</h3>
+  {% if current %}
+    <p><strong>Version:</strong> {{ current.version }}</p>
+    <p><strong>Trained At:</strong> {{ current.trained_at }}</p>
+    {% if current.metrics and current.metrics.accuracy is defined %}
+      <p><strong>Accuracy:</strong> {{ (current.metrics.accuracy * 100) | round(2) }}%</p>
+    {% endif %}
+  {% else %}
+    <p>No trained model found yet. You can train one below.</p>
+  {% endif %}
+</div>
+
+<div class="card form-card">
+  <h3>Train / Retrain</h3>
+  <form method="post" enctype="multipart/form-data">
+    <label>Upload Dataset (CSV, optional)</label>
+    <input type="file" name="dataset" accept=".csv" />
+    <div class="form-hint">If you don't upload a dataset, the built-in credit dataset (if present) or synthetic data will be used.</div>
+    <button class="btn" type="submit">Train Model</button>
+  </form>
+</div>
+
+{% if info %}
+<div class="card">
+  <h3>Last Training Run</h3>
+  <p><strong>Status:</strong> {{ info.status }}</p>
+  <p><strong>Model Path:</strong> {{ info.model_path }}</p>
+  {% if info.version %}<p><strong>Version:</strong> {{ info.version }}</p>{% endif %}
+  {% if info.trained_at %}<p><strong>Trained At:</strong> {{ info.trained_at }}</p>{% endif %}
+  {% if info.data_source %}<p><strong>Data Source:</strong> {{ info.data_source }}</p>{% endif %}
+  {% if info.rows %}<p><strong>Rows Used:</strong> {{ info.rows }}</p>{% endif %}
+  {% if info.metrics and info.metrics.accuracy is defined %}
+    <p><strong>Accuracy:</strong> {{ (info.metrics.accuracy * 100) | round(2) }}%</p>
+    {% if info.metrics['weighted avg'] is defined %}
+      <p><strong>Weighted F1:</strong> {{ info.metrics['weighted avg'].get('f1-score', 0) | round(3) }}</p>
+    {% endif %}
+  {% endif %}
+  <details>
+    <summary>Full Metrics</summary>
+    <pre class="pre">{{ info.metrics | tojson(indent=2) }}</pre>
+  </details>
+</div>
+{% endif %}
+
+<a class="btn btn-secondary" href="{{ url_for('admin_dashboard') }}">Back to Admin</a>
+{% endblock %}
+

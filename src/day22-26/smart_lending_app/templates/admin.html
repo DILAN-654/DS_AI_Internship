@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Admin Dashboard</h2>
+<div class="admin-actions">
+  <a class="btn btn-secondary" href="{{ url_for('admin_train') }}"><i class="fa-solid fa-gear"></i> Train / Retrain Model</a>
+</div>
+<div class="stats-grid">
+  <div class="stat-card"><h3>Total Apps</h3><p>{{ stats.total }}</p></div>
+  <div class="stat-card"><h3>Pending</h3><p>{{ stats.pending }}</p></div>
+  <div class="stat-card"><h3>Approved</h3><p>{{ stats.approved }}</p></div>
+  <div class="stat-card"><h3>Rejected</h3><p>{{ stats.rejected }}</p></div>
+  <div class="stat-card"><h3>Low Risk</h3><p>{{ stats.low }}</p></div>
+  <div class="stat-card"><h3>Medium Risk</h3><p>{{ stats.medium }}</p></div>
+  <div class="stat-card"><h3>High Risk</h3><p>{{ stats.high }}</p></div>
+</div>
+
+<div class="charts-grid">
+  <div class="card chart-card">
+    <h3>Risk Distribution</h3>
+    <canvas id="riskChart" height="120"></canvas>
+  </div>
+  <div class="card chart-card">
+    <h3>Approval Status</h3>
+    <canvas id="statusChart" height="120"></canvas>
+  </div>
+</div>
+
+<h3>Applications</h3>
+<table class="table">
+  <thead><tr><th>ID</th><th>User</th><th>Requested</th><th>Risk</th><th>System</th><th>Status</th><th>Confidence</th><th></th><th>Action</th></tr></thead>
+  <tbody>
+    {% for app in apps %}
+    <tr>
+      <td>{{ app.id }}</td>
+      <td>{{ app.user.name }}</td>
+      <td>${{ app.requested_loan_amount | round(0) }}</td>
+      <td>
+        {% if app.prediction %}
+          <span class="badge badge-risk-{{ app.prediction.risk_level|lower }}">{{ app.prediction.risk_level }}</span>
+        {% else %}-{% endif %}
+      </td>
+      <td><span class="badge badge-sys">{{ app.system_recommendation }}</span></td>
+      <td><span class="badge badge-{{ app.status|lower }}">{{ app.status }}</span></td>
+      <td>{% if app.prediction %}{{ (app.prediction.confidence_score * 100) | round(1) }}%{% else %}-{% endif %}</td>
+      <td><a href="{{ url_for('admin_application_detail', application_id=app.id) }}">View</a></td>
+      <td class="actions">
+        <form method="post" action="{{ url_for('admin_action', application_id=app.id, action='approve') }}">
+          <button class="link-btn" type="submit">Approve</button>
+        </form>
+        <form method="post" action="{{ url_for('admin_action', application_id=app.id, action='reject') }}">
+          <button class="link-btn danger" type="submit">Reject</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="9">No applications yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const riskLabels = ["Low", "Medium", "High"];
+  const riskCounts = [{{ stats.low }}, {{ stats.medium }}, {{ stats.high }}];
+  new Chart(document.getElementById("riskChart"), {
+    type: "doughnut",
+    data: { labels: riskLabels, datasets: [{ data: riskCounts, backgroundColor: ["#22c55e","#f59e0b","#ef4444"] }] },
+    options: { plugins: { legend: { position: "bottom" } } }
+  });
+
+  const statusLabels = ["Pending","Approved","Rejected"];
+  const statusCounts = [{{ stats.pending }}, {{ stats.approved }}, {{ stats.rejected }}];
+  new Chart(document.getElementById("statusChart"), {
+    type: "bar",
+    data: { labels: statusLabels, datasets: [{ data: statusCounts, backgroundColor: ["#64748b","#0b3d91","#ef4444"] }] },
+    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+  });
+</script>
+{% endblock %}

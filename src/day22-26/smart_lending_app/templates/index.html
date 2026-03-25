@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="hero">
+  <h1>Smart Lending Optimization System</h1>
+  <p>Use AI to predict credit risk, recommend loan amounts, and streamline lending decisions.</p>
+  {% if user %}
+  <a class="btn" href="{{ url_for('dashboard') }}">Go to Dashboard</a>
+  {% else %}
+  <a class="btn" href="{{ url_for('login') }}">Login</a>
+  <a class="btn btn-secondary" href="{{ url_for('register') }}">Register</a>
+  {% endif %}
+</div>
+<div class="cards-row">
+  <div class="card"><h3>AI Credit Risk</h3><p>Classify borrowers as Low/Medium/High risk.</p></div>
+  <div class="card"><h3>Loan Recommendation</h3><p>Get loan amount and EMI suggestions.</p></div>
+  <div class="card"><h3>Admin Controls</h3><p>Approve/reject applications and view analytics.</p></div>
+</div>
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+  <div class="flex-between">
+    <div>
+      <h2>Loan Application #{{ application.id }}</h2>
+      <div class="subtle">
+        Submitted on {{ application.created_at.strftime('%Y-%m-%d %H:%M') }}
+        {% if application.user %} by {{ application.user.name }}{% endif %}
+      </div>
+    </div>
+    <div class="badges">
+      <span class="badge badge-{{ application.status|lower }}">{{ application.status }}</span>
+      <span class="badge badge-sys">System: {{ application.system_recommendation }}</span>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <h3>Borrower Profile</h3>
+    <ul class="kv">
+      <li><span>Age</span><span>{{ application.age }}</span></li>
+      <li><span>Gender</span><span>{{ application.gender }}</span></li>
+      <li><span>Employment</span><span>{{ application.employment_type }}</span></li>
+      <li><span>Monthly Income</span><span>${{ application.monthly_income | round(2) }}</span></li>
+      <li><span>Requested Loan</span><span>${{ application.requested_loan_amount | round(0) }}</span></li>
+      <li><span>Transactions</span><span>{{ application.transaction_count }}</span></li>
+      <li><span>Avg Monthly Spend</span><span>${{ application.avg_monthly_spend | round(2) }}</span></li>
+      <li><span>Savings Ratio</span><span>{{ application.savings_ratio | round(2) }}</span></li>
+      <li><span>Mobile Recharge Freq</span><span>{{ application.mobile_recharge_freq }}</span></li>
+      <li><span>Missed Payments</span><span>{{ application.missed_payments }}</span></li>
+      <li><span>Credit Score</span><span>{{ application.credit_score }}</span></li>
+    </ul>
+
+    {% if application.document_filename %}
+      <a class="btn btn-secondary" href="{{ url_for('download_upload', filename=application.document_filename) }}"><i class="fa-solid fa-file-arrow-down"></i> Download Document</a>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <h3>Prediction & Plan</h3>
+    {% if prediction %}
+      <p><strong>Risk Level:</strong> <span class="badge badge-risk-{{ prediction.risk_level|lower }}">{{ prediction.risk_level }}</span></p>
+      <p><strong>Confidence:</strong> {{ (prediction.confidence_score * 100) | round(1) }}%</p>
+      <p class="subtle"><strong>Model Version:</strong> {{ prediction.model_version }}</p>
+    {% else %}
+      <p>No prediction available for this application.</p>
+    {% endif %}
+
+    <hr class="sep" />
+
+    <p><strong>Recommended Loan Amount:</strong> ${{ application.recommended_loan_amount }}</p>
+    <p><strong>Repayment Term:</strong> {{ application.term_months }} months</p>
+    <p><strong>Estimated Interest Rate:</strong> {{ (application.annual_interest_rate * 100) | round(1) }}%</p>
+    <p><strong>Estimated EMI:</strong> ${{ application.estimated_emi }}/month</p>
+  </div>
+</div>
+
+{% if explanation %}
+<div class="card">
+  <h3>Explanation (Basic XAI)</h3>
+  <div class="grid-2">
+    <div>
+      <h4>Strengths</h4>
+      <ul>
+        {% for item in explanation.positives or [] %}
+          <li>{{ item }}</li>
+        {% else %}
+          <li>No strong positives detected.</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div>
+      <h4>Risk Factors</h4>
+      <ul>
+        {% for item in explanation.risk_factors or [] %}
+          <li>{{ item }}</li>
+        {% else %}
+          <li>No major risk factors detected.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% if explanation.note %}<div class="subtle">{{ explanation.note }}</div>{% endif %}
+</div>
+{% endif %}
+
+{% if probabilities %}
+<div class="card">
+  <h3>Class Probabilities</h3>
+  <div class="prob-grid">
+    {% for k,v in probabilities.items() %}
+      <div class="prob">
+        <div class="prob-label">{{ k }}</div>
+        <div class="prob-bar"><div class="prob-fill" style="width: {{ (v*100)|round(1) }}%"></div></div>
+        <div class="prob-val">{{ (v*100)|round(1) }}%</div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<div class="actions-row">
+  {% if user and user.is_admin %}
+    <a class="btn btn-secondary" href="{{ url_for('admin_dashboard') }}">Back to Admin</a>
+  {% else %}
+    <a class="btn btn-secondary" href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+  {% endif %}
+</div>
+{% endblock %}
+

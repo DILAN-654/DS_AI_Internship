@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Borrower Dashboard</h2>
+<p>Welcome, {{ user.name }}. Submit your loan details and get instant risk evaluation.</p>
+<a class="btn" href="{{ url_for('apply_loan') }}">New Loan Application</a>
+<h3>Your Applications</h3>
+<table class="table">
+  <thead><tr><th>ID</th><th>Requested</th><th>Risk</th><th>System</th><th>Status</th><th>Confidence</th><th>Date</th><th></th></tr></thead>
+  <tbody>
+  {% for app in apps %}
+  <tr>
+    <td>{{ app.id }}</td>
+    <td>${{ app.requested_loan_amount | round(0) }}</td>
+    <td>
+      {% if app.prediction %}
+        <span class="badge badge-risk-{{ app.prediction.risk_level|lower }}">{{ app.prediction.risk_level }}</span>
+      {% else %}-{% endif %}
+    </td>
+    <td><span class="badge badge-sys">{{ app.system_recommendation }}</span></td>
+    <td><span class="badge badge-{{ app.status|lower }}">{{ app.status }}</span></td>
+    <td>
+      {% if app.prediction %}{{ (app.prediction.confidence_score * 100) | round(1) }}%{% else %}-{% endif %}
+    </td>
+    <td>{{ app.created_at.strftime('%Y-%m-%d') }}</td>
+    <td><a href="{{ url_for('application_detail', application_id=app.id) }}">View</a></td>
+  </tr>
+  {% else %}
+  <tr><td colspan="8">No applications yet.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

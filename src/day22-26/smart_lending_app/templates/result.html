@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+  <h2>Prediction Saved</h2>
+  <p>Your loan application has been submitted and evaluated.</p>
+  <a class="btn" href="{{ url_for('application_detail', application_id=application.id) }}">View Application Details</a>
+</div>
+{% endblock %}

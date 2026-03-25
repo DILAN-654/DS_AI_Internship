@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Apply for Loan</h2>
+<form method="post" class="card form-card" enctype="multipart/form-data">
+  <div class="form-hint">Provide borrower + alternative data to improve prediction accuracy.</div>
+
+  <label>Age</label><input type="number" name="age" required min="18" max="90" />
+
+  <label>Gender</label>
+  <select name="gender" required>
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
+    <option value="Other">Other</option>
+  </select>
+
+  <label>Employment Type</label>
+  <select name="employment_type" required>
+    <option value="Salaried">Salaried</option>
+    <option value="Self-Employed">Self-Employed</option>
+    <option value="Student">Student</option>
+    <option value="Unemployed">Unemployed</option>
+  </select>
+
+  <label>Monthly Income</label><input type="number" name="monthly_income" required min="500" step="0.01" />
+  <label>Requested Loan Amount</label><input type="number" name="requested_loan_amount" required min="1000" step="0.01" />
+
+  <label>Transaction Count (last 90 days)</label><input type="number" name="transaction_count" required min="0" max="10000" />
+  <label>Average Monthly Spend</label><input type="number" name="avg_monthly_spend" required min="0" step="0.01" />
+  <label>Savings Ratio (0-1)</label><input type="number" name="savings_ratio" required min="0" max="1" step="0.01" />
+  <label>Mobile Recharge Frequency (per month)</label><input type="number" name="mobile_recharge_freq" required min="0" max="100" />
+  <label>Missed Payments</label><input type="number" name="missed_payments" required min="0" max="50" />
+  <label>Credit Score</label><input type="number" name="credit_score" required min="300" max="850" />
+
+  <label>Upload Document (optional)</label><input type="file" name="document" accept=".pdf,.png,.jpg,.jpeg" />
+
+  <button class="btn" type="submit">Submit Application</button>
+</form>
+{% endblock %}
