@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}">
+
+    <title>Abalone Prediction Service</title>
+</head>
+
+<body>
+    <div class="container m-1">
+        <h1>Abalone Age Predictor</h1>
+        <h3 class="mb-4">Please enter your abalone measurements below:</h3>
+        <p><strong>Model:</strong> {{ overview.algorithm }}</p>
+        {% if overview.metrics %}
+        <p><strong>Validation MAE:</strong> {{ "%.2f"|format(overview.metrics.mae) }} years</p>
+        {% endif %}
+        {% if error %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+        <form method="POST">
+            {% for field_name, spec in field_specs.items() %}
+            <label for="{{ field_name }}">{{ spec.label }}</label>
+            <input
+                id="{{ field_name }}"
+                name="{{ field_name }}"
+                type="number"
+                min="{{ spec.min }}"
+                max="{{ spec.max }}"
+                step="{{ spec.step }}"
+                value="{{ form_data[field_name] }}"
+                required
+            >
+            <br>
+            {% endfor %}
+            <button class="btn btn-primary" type="submit">Predict</button>
+        </form>
+    </div>
+</body>
+
+</html>

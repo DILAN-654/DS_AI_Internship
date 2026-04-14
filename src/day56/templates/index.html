@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Day 56 | Random Forest Deployment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Day 56 ML Deployment Project</p>
+          <h1>Random Forest Iris Classifier</h1>
+          <p class="hero-text">
+            This Flask web app takes flower measurements, sends them to a deployed
+            Random Forest model, and returns a live species prediction with confidence scores.
+          </p>
+        </div>
+        <div class="hero-card">
+          <span class="hero-label">Production Snapshot</span>
+          <strong>{{ overview.algorithm }}</strong>
+          <span>Accuracy: {{ "%.2f"|format(overview.accuracy * 100) }}%</span>
+          <span>Classes: {{ overview.classes|join(", ") }}</span>
+        </div>
+      </header>
+
+      <main class="grid">
+        <section class="panel form-panel">
+          <div class="panel-heading">
+            <h2>Try a Prediction</h2>
+            <p>Enter the flower measurements below and submit the form.</p>
+          </div>
+
+          {% if error %}
+          <div class="alert">{{ error }}</div>
+          {% endif %}
+
+          <form method="post" class="prediction-form">
+            {% for field_name, spec in field_specs.items() %}
+            <label class="field">
+              <span>{{ spec.label }} ({{ spec.unit }})</span>
+              <input
+                type="number"
+                name="{{ field_name }}"
+                min="{{ spec.min }}"
+                max="{{ spec.max }}"
+                step="{{ spec.step }}"
+                value="{{ form_data[field_name] }}"
+                required
+              />
+            </label>
+            {% endfor %}
+
+            <button type="submit">Predict Flower Species</button>
+          </form>
+        </section>
+
+        <section class="panel result-panel">
+          <div class="panel-heading">
+            <h2>Prediction Result</h2>
+            <p>The model returns the most likely species and class probabilities.</p>
+          </div>
+
+          {% if prediction %}
+          <div class="result-card">
+            <p class="result-label">Predicted Class</p>
+            <h3>{{ prediction.predicted_class|title }}</h3>
+            <p class="confidence">Confidence: {{ "%.2f"|format(prediction.confidence * 100) }}%</p>
+          </div>
+
+          <div class="probability-list">
+            {% for label, score in prediction.probabilities.items() %}
+            <div class="probability-row">
+              <div class="probability-meta">
+                <span>{{ label|title }}</span>
+                <span>{{ "%.2f"|format(score * 100) }}%</span>
+              </div>
+              <div class="probability-track">
+                <div class="probability-fill" style="width: {{ "%.2f"|format(score * 100) }}%"></div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="empty-state">
+            <p>Your prediction will appear here after you submit the form.</p>
+          </div>
+          {% endif %}
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <h2>Model Details</h2>
+            <p>The model is trained automatically when the app starts on a fresh machine.</p>
+          </div>
+          <ul class="detail-list">
+            <li><strong>Algorithm:</strong> {{ overview.algorithm }}</li>
+            <li><strong>Trained At:</strong> {{ overview.trained_at }}</li>
+            <li><strong>Saved Model:</strong> {{ overview.model_path }}</li>
+          </ul>
+
+          <div class="importance-list">
+            {% for feature_name, score in overview.feature_importances %}
+            <div class="probability-row">
+              <div class="probability-meta">
+                <span>{{ field_specs[feature_name].label }}</span>
+                <span>{{ "%.2f"|format(score * 100) }}%</span>
+              </div>
+              <div class="probability-track">
+                <div class="importance-fill" style="width: {{ "%.2f"|format(score * 100) }}%"></div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <h2>API Example</h2>
+            <p>Use the `/api/predict` endpoint if you want to connect this model to another app.</p>
+          </div>
+          <pre class="code-block">POST /api/predict
+Content-Type: application/json
+
+{{ default_payload }}</pre>
+        </section>
+      </main>
+    </div>
+  </body>
+  </html>
